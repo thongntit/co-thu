@@ -1,0 +1,89 @@
+<!doctype html>
+<html lang="vi">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+    <meta name="theme-color" content="#071713" />
+    <meta name="description" content="Cờ Thú 3D — chiến thuật rừng đêm trên bàn cờ 7 x 9." />
+    <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+    <title>Cờ Thú 3D · Jungle Strategy</title>
+  </head>
+  <body>
+    <main id="app">
+      <canvas id="game-canvas" aria-label="Bàn cờ thú 3D"></canvas>
+      <div class="screen-vignette" aria-hidden="true"></div>
+
+      <header class="topbar">
+        <div class="brand-lockup">
+          <div class="brand-line">
+            <img class="brand-emblem" src="/assets/ui/co-thu-emblem.png" alt="Huy hiệu Cờ Thú" />
+            <div>
+              <span class="eyebrow">JUNGLE STRATEGY · 3D EDITION</span>
+              <h1>CỜ THÚ <em>3D</em></h1>
+            </div>
+          </div>
+          <p>Vượt sông. Dụ bẫy. Chiếm hang.</p>
+        </div>
+        <div class="top-actions">
+          <button id="mode-toggle" class="control-button" type="button">Đấu với Bot</button>
+          <button id="rules-button" class="control-button" type="button">Luật chơi</button>
+          <button id="sound-toggle" class="control-button icon-button" type="button" aria-label="Bật tắt âm thanh">Âm thanh: bật</button>
+          <button id="reset-button" class="control-button primary-button" type="button">Ván mới</button>
+        </div>
+      </header>
+
+      <section class="match-hud" aria-live="polite">
+        <article class="side-card red-side">
+          <div class="side-card-heading"><span class="team-dot"></span><span>ĐỎ · BÊN A</span></div>
+          <strong id="red-count">8</strong>
+          <span class="side-card-caption">quân còn lại</span>
+          <div id="red-captured" class="captured-list" aria-label="Quân xanh đã bị bắt"></div>
+        </article>
+
+        <article class="turn-card">
+          <span id="turn-caption" class="turn-caption">ĐẾN LƯỢT</span>
+          <strong id="turn-value" class="turn-value red">ĐỎ</strong>
+          <div id="status-line" class="status-line">Chọn một quân để bắt đầu</div>
+          <div id="selection-info" class="selection-info">Mỗi quân đi một ô. Hổ và sư tử có thể nhảy qua sông.</div>
+        </article>
+
+        <article class="side-card blue-side">
+          <div class="side-card-heading"><span class="team-dot"></span><span>XANH · BÊN B</span></div>
+          <strong id="blue-count">8</strong>
+          <span class="side-card-caption">quân còn lại</span>
+          <div id="blue-captured" class="captured-list" aria-label="Quân đỏ đã bị bắt"></div>
+        </article>
+      </section>
+
+      <footer class="bottom-bar">
+        <div class="legend">
+          <span><i class="legend-swatch water"></i>Sông</span>
+          <span><i class="legend-swatch trap"></i>Bẫy</span>
+          <span><i class="legend-swatch den"></i>Hang</span>
+          <span class="hint">Chạm quân → chạm ô sáng để đi</span>
+        </div>
+        <div id="move-log" class="move-log" aria-label="Lịch sử nước đi"></div>
+      </footer>
+
+      <div id="toast" class="toast" role="status" aria-live="polite"></div>
+
+      <div id="rules-modal" class="modal-backdrop" hidden>
+        <section class="rules-sheet" role="dialog" aria-modal="true" aria-labelledby="rules-title">
+          <button id="rules-close" class="modal-close" type="button" aria-label="Đóng luật chơi">×</button>
+          <span class="eyebrow">QUICK RULES · V1</span>
+          <h2 id="rules-title">Cách chơi Cờ Thú</h2>
+          <p class="rules-lead">Đưa một quân của bạn vào hang đối thủ hoặc bắt hết quân đối phương.</p>
+          <div class="rules-grid">
+            <div><span>01</span><p>Quân thường đi <strong>một ô</strong> ngang hoặc dọc. Không đi chéo.</p></div>
+            <div><span>02</span><p><strong>Chuột</strong> là quân duy nhất được vào sông. Chuột ăn được voi.</p></div>
+            <div><span>03</span><p><strong>Hổ / Sư tử</strong> nhảy qua cả dải sông, nhưng bị chặn nếu có chuột trong sông.</p></div>
+            <div><span>04</span><p>Quân đứng trong <strong>bẫy</strong> mất sức mạnh; quân bên nào cũng có thể bắt.</p></div>
+          </div>
+          <div class="rank-strip"><span>Chuột 1</span><span>Mèo 2</span><span>Sói 3</span><span>Chó 4</span><span>Báo 5</span><span>Hổ 6</span><span>Sư tử 7</span><span>Voi 8</span></div>
+          <p class="rules-footnote">Bàn cờ 7 × 9 · Đỏ đi trước · Nhấn “Đấu với Bot” để đổi sang hai người chơi cùng máy.</p>
+        </section>
+      </div>
+    </main>
+    <script type="module" src="/src/main.ts"></script>
+  </body>
+</html>
