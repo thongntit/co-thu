@@ -23,7 +23,8 @@ export const TILE_TOP = 0.72;
 const BOARD_CENTER_X = (BOARD_WIDTH - 1) / 2;
 const BOARD_CENTER_Y = (BOARD_HEIGHT - 1) / 2;
 const USE_PIECE_SHADOWS = window.innerWidth >= 720;
-const MODEL_TARGET_SIZE = 1.05;
+const MODEL_TARGET_SIZE = 1.05 * 2;
+const MODEL_FORWARD_CORRECTION = Math.PI / 2;
 const TEAM_COLORS: Record<PlayerId, string> = {
   red: '#c45144',
   blue: '#3e91a2',
@@ -32,6 +33,7 @@ const TEAM_COLORS: Record<PlayerId, string> = {
 type PieceView = {
   group: THREE.Group;
   animalRoot: THREE.Group;
+  badge: THREE.Sprite;
   piece: Piece;
   externalModel?: THREE.Object3D;
 };
@@ -395,12 +397,14 @@ export class BoardView {
     }
     const clone = template.clone(true);
     clone.position.copy(template.position);
-    // Animal meshes face local -Z. Red starts at world +Z and looks toward
-    // the board center (-Z); blue starts at world -Z and looks toward (+Z).
-    clone.rotation.set(0, 0, 0);
+    // Tripo's quadrupeds face local +X. Correct that once into the same local
+    // -Z convention as the procedural animal, then the team root points inward.
+    clone.rotation.set(0, MODEL_FORWARD_CORRECTION, 0);
     clone.scale.setScalar(1);
     view.animalRoot.add(clone);
     view.externalModel = clone;
+    const modelBounds = new THREE.Box3().setFromObject(template);
+    view.badge.position.y = modelBounds.max.y + 0.18;
   }
 
   private createPlatform(): void {
@@ -552,6 +556,8 @@ export class BoardView {
 
     const animalRoot = createAnimalForm(piece.type, piece.owner);
     animalRoot.userData.pieceId = piece.id;
+    // Red starts at world +Z and looks toward -Z; blue starts at -Z and looks
+    // toward +Z, so both teams face the opponent across the board.
     animalRoot.rotation.y = piece.owner === 'red' ? 0 : Math.PI;
     animalRoot.traverse((object) => {
       object.userData.pieceId = piece.id;
@@ -565,7 +571,7 @@ export class BoardView {
       if (object instanceof THREE.Mesh) object.castShadow = USE_PIECE_SHADOWS;
     });
     this.pickTargets.push(group);
-    return { group, animalRoot, piece };
+    return { group, animalRoot, badge, piece };
   }
 }
 
