@@ -25,6 +25,7 @@ const BOARD_CENTER_Y = (BOARD_HEIGHT - 1) / 2;
 const USE_PIECE_SHADOWS = window.innerWidth >= 720;
 const MODEL_TARGET_SIZE = 1.05 * 2;
 const MODEL_FORWARD_CORRECTION = Math.PI / 2;
+const MODEL_BASE_TOP = 0.2;
 const TEAM_COLORS: Record<PlayerId, string> = {
   red: '#c45144',
   blue: '#3e91a2',
@@ -376,7 +377,7 @@ export class BoardView {
       if (!Number.isFinite(maxSize) || maxSize <= 0) return false;
       template.scale.setScalar(MODEL_TARGET_SIZE / maxSize);
       const scaledBounds = new THREE.Box3().setFromObject(template);
-      template.position.y += -scaledBounds.min.y + 0.04;
+      template.position.y += -scaledBounds.min.y + MODEL_BASE_TOP;
       this.modelTemplates.set(type, template);
       for (const view of this.pieceViews.values()) {
         if (view.piece.type === type) this.replaceWithExternalModel(view);
@@ -400,7 +401,9 @@ export class BoardView {
     // Tripo's quadrupeds face local +X. Correct that once into the same local
     // -Z convention as the procedural animal, then the team root points inward.
     clone.rotation.set(0, MODEL_FORWARD_CORRECTION, 0);
-    clone.scale.setScalar(1);
+    // Keep the normalized root scale. Resetting this to 1 makes smaller source
+    // meshes (especially lion) tiny and invalidates the ground offset above.
+    clone.scale.copy(template.scale);
     view.animalRoot.add(clone);
     view.externalModel = clone;
     const modelBounds = new THREE.Box3().setFromObject(template);
