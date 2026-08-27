@@ -23,6 +23,7 @@ export const TILE_TOP = 0.72;
 const BOARD_CENTER_X = (BOARD_WIDTH - 1) / 2;
 const BOARD_CENTER_Y = (BOARD_HEIGHT - 1) / 2;
 const USE_PIECE_SHADOWS = window.innerWidth >= 720;
+const MODEL_TARGET_SIZE = 1.05;
 const TEAM_COLORS: Record<PlayerId, string> = {
   red: '#c45144',
   blue: '#3e91a2',
@@ -371,7 +372,7 @@ export class BoardView {
       const size = bounds.getSize(new THREE.Vector3());
       const maxSize = Math.max(size.x, size.y, size.z);
       if (!Number.isFinite(maxSize) || maxSize <= 0) return false;
-      template.scale.setScalar(0.8 / maxSize);
+      template.scale.setScalar(MODEL_TARGET_SIZE / maxSize);
       const scaledBounds = new THREE.Box3().setFromObject(template);
       template.position.y += -scaledBounds.min.y + 0.04;
       this.modelTemplates.set(type, template);
@@ -394,7 +395,9 @@ export class BoardView {
     }
     const clone = template.clone(true);
     clone.position.copy(template.position);
-    clone.rotation.set(0, view.piece.owner === 'red' ? Math.PI : 0, 0);
+    // Animal meshes face local -Z. Red starts at world +Z and looks toward
+    // the board center (-Z); blue starts at world -Z and looks toward (+Z).
+    clone.rotation.set(0, 0, 0);
     clone.scale.setScalar(1);
     view.animalRoot.add(clone);
     view.externalModel = clone;
@@ -549,6 +552,7 @@ export class BoardView {
 
     const animalRoot = createAnimalForm(piece.type, piece.owner);
     animalRoot.userData.pieceId = piece.id;
+    animalRoot.rotation.y = piece.owner === 'red' ? 0 : Math.PI;
     animalRoot.traverse((object) => {
       object.userData.pieceId = piece.id;
     });
