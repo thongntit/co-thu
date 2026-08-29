@@ -1,7 +1,9 @@
 :root {
   color: #f3ead3;
   background: #071713;
-  font-family: "Avenir Next", Avenir, "Segoe UI", sans-serif;
+  --font-sans: "Be Vietnam Pro", "Helvetica Neue", Arial, sans-serif;
+  --font-display: "Noto Serif", Georgia, "Times New Roman", serif;
+  font-family: var(--font-sans);
   font-synthesis: none;
   text-rendering: geometricPrecision;
   --ink: #f3ead3;
@@ -105,7 +107,7 @@ h1, h2, p { margin: 0; }
 h1 {
   margin-top: 4px;
   color: var(--ink);
-  font-family: Georgia, "Times New Roman", serif;
+  font-family: var(--font-display);
   font-size: clamp(1.65rem, 3.2vw, 2.6rem);
   font-weight: 600;
   letter-spacing: 0.08em;
@@ -228,7 +230,7 @@ h1 em {
   display: inline-block;
   margin-top: 7px;
   color: var(--ink);
-  font-family: Georgia, "Times New Roman", serif;
+  font-family: var(--font-display);
   font-size: 1.7rem;
   font-weight: 500;
   line-height: 0.85;
@@ -285,7 +287,7 @@ h1 em {
 .turn-value {
   display: block;
   margin-top: 3px;
-  font-family: Georgia, "Times New Roman", serif;
+  font-family: var(--font-display);
   font-size: clamp(1.45rem, 2.7vw, 1.95rem);
   font-weight: 500;
   line-height: 1;
@@ -419,7 +421,7 @@ h1 em {
 .rules-sheet h2 {
   margin-top: 10px;
   color: var(--ink);
-  font-family: Georgia, "Times New Roman", serif;
+  font-family: var(--font-display);
   font-size: clamp(1.9rem, 5vw, 3rem);
   font-weight: 500;
 }
